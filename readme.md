@@ -1,0 +1,1 @@
+This project demonstrates how to use Amazon SES to store security camera alarm emails in S3. 
