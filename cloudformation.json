@@ -36,7 +36,7 @@
     "Resources": {
       "s3Bucket": {
         "Type": "AWS::S3::Bucket",
-        "DependsOn": { "Ref": "snsTopic" },
+        "DependsOn": "snsTopic",
         "Properties": {
           "AccessControl": "Private",
           "BucketName": { "Ref": "bucketName" },
@@ -48,12 +48,11 @@
               "Transitions" : [
                 {
                   "StorageClass" : "STANDARD_IA",
-                  "TransitionInDays" : "1"
+                  "TransitionInDays" : "30"
                 }
               ]
             }
             ]},
-
           "Tags": []
         }
       },
