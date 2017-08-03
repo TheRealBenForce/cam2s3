@@ -53,6 +53,23 @@
               ]
             }
             ]},
+            "NotificationConfiguration": {
+                "TopicConfigurations": [
+                    {
+                        "Topic": { "Ref": "snsTopic" },
+                        "Event": "s3:ObjectCreated:*",
+                        "Filter": {
+                          "S3Key" : {
+                            "Rules" : [ {
+                              "Name" : "prefix",
+                              "Value" : "emails"
+                            }]
+                          }
+                        }
+                    }
+                ]
+            },
+          "VersioningConfiguration": {"Status": "Enabled"},
           "Tags": []
         }
       },
@@ -68,6 +85,30 @@
           ],
           "TopicName": "SecurityCameraAlarm"
         }
+      },
+      "SNSTopicPolicy" : {
+          "Type" : "AWS::SNS::TopicPolicy",
+          "Properties" : {
+              "PolicyDocument" : {
+                  "Id" : "SecurityCameraAlarmTopicPolicy",
+                  "Version" : "2012-10-17",
+                  "Statement" : [ {
+                      "Sid" : "Statement-id",
+                      "Effect" : "Allow",
+                      "Principal" : {
+                          "AWS" : "*"
+                      },
+                      "Action" : "sns:Publish",
+                      "Resource" : { "Ref": "snsTopic" },
+                      "Condition" : {
+                          "ArnLike": {
+                              "aws:SourceArn": { "Fn::Join": [ "", [ "arn:aws:s3:::", { "Ref" : "bucketName" } ] ] }
+                          }
+                      }
+                  } ]
+              },
+              "Topics" : [ { "Ref" : "snsTopic" } ]
+          }
       },
 
 
