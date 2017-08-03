@@ -73,6 +73,33 @@
           "Tags": []
         }
       },
+
+      "s3BucketPolicy": {
+        "Type": "AWS::S3::BucketPolicy",
+        "Properties": {
+          "Bucket" : { "Ref": "s3Bucket" },
+          "PolicyDocument" :{
+                "Version": "2008-10-17",
+                "Statement": [
+                    {
+                        "Sid": "GiveSESPermissionToWriteEmail",
+                        "Effect": "Allow",
+                        "Principal": {
+                            "Service": [
+                                "ses.amazonaws.com"
+                            ]
+                        },
+                        "Action": [
+                            "s3:PutObject"
+                        ],
+                        "Resource": {"Fn::Join" : ["",[ "arn:aws:s3:::", { "Ref": "s3Bucket" }, "/emails/*" ] ]},
+                        "Condition": {
+                            "StringEquals": {
+                                "aws:Referer": { "Ref": "AWS::AccountId" }
+          }}}]}
+        }
+      },
+
       "snsTopic": {
         "Type": "AWS::SNS::Topic",
         "Properties": {
@@ -86,6 +113,7 @@
           "TopicName": "SecurityCameraAlarm"
         }
       },
+
       "SNSTopicPolicy" : {
           "Type" : "AWS::SNS::TopicPolicy",
           "Properties" : {
