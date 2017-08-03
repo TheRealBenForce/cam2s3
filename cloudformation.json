@@ -1,0 +1,79 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This project demonstrates how to use Amazon SES to store security camera alarm emails in S3. ",
+    "Metadata": {
+
+    },
+    "Parameters": {
+      "bucketName": {
+          "Description": "The name of your S3 bucket. Must be globally unique.",
+          "Type": "String",
+          "Default": "my-security-camera-bucket"
+      },
+      "fromEmail": {
+          "Description": "Email address you'd like to direct alarm emails to. Must be a Verified email in SES.",
+          "Type": "String",
+          "Default": "camera@benforce.io"
+      },
+      "toEmail": {
+          "Description": "Email address you'd like emails sent from. Must be a Verified email in SES.",
+          "Type": "String",
+          "Default": "camera@benforce.io"
+      },
+      "notificationEmail": {
+          "Description": "Email to be notified when S3 receives a new email.",
+          "Type": "String",
+          "Default": "-"
+      }
+
+    },
+    "Mappings": {
+
+    },
+    "Conditions": {
+
+    },
+    "Resources": {
+      "s3Bucket": {
+        "Type": "AWS::S3::Bucket",
+        "DependsOn": { "Ref": "snsTopic" },
+        "Properties": {
+          "AccessControl": "Private",
+          "BucketName": { "Ref": "bucketName" },
+          "LifecycleConfiguration": {"Rules": [
+            {
+              "Id" : "AllInfrequentlyAccessed",
+              "Prefix": "emails",
+              "Status" : "Enabled",
+              "Transitions" : [
+                {
+                  "StorageClass" : "STANDARD_IA",
+                  "TransitionInDays" : "1"
+                }
+              ]
+            }
+            ]},
+
+          "Tags": []
+        }
+      },
+      "snsTopic": {
+        "Type": "AWS::SNS::Topic",
+        "Properties": {
+          "DisplayName": "SecurityCameraAlarm",
+          "Subscription": [
+            {
+              "Endpoint" : { "Ref": "notificationEmail" },
+              "Protocol" : "email"
+            }
+          ],
+          "TopicName": "SecurityCameraAlarm"
+        }
+      },
+
+
+    },
+    "Outputs": {
+
+    }
+}
