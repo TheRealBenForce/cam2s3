@@ -8,23 +8,23 @@
       "bucketName": {
           "Description": "The name of your S3 bucket. Must be globally unique.",
           "Type": "String",
-          "Default": "my-security-camera-bucket"
+          "Default": ""
       },
       "fromEmail": {
           "Description": "Email address you'd like to direct alarm emails to. Must be a Verified email in SES.",
           "Type": "String",
-          "Default": "camera@benforce.io"
+          "Default": ""
       },
       "toEmail": {
           "Description": "Email address you'd like emails sent from. Must be a Verified email in SES.",
           "Type": "String",
-          "Default": "camera@benforce.io"
+          "Default": ""
       },
       "notificationEmail": {
           "Description": "Email to be notified when S3 receives a new email.",
           "Type": "String",
-          "Default": "-"
-      }
+          "Default": ""
+      },
 
     },
     "Mappings": {
@@ -60,10 +60,7 @@
                         "Event": "s3:ObjectCreated:*",
                         "Filter": {
                           "S3Key" : {
-                            "Rules" : [ {
-                              "Name" : "prefix",
-                              "Value" : "emails"
-                            }]
+                            "Rules" : [ {"Name" : "prefix", "Value" : "emails" } ]
                           }
                         }
                     }
@@ -137,10 +134,9 @@
               },
               "Topics" : [ { "Ref" : "snsTopic" } ]
           }
-      },
-
-
+      }
     },
+
     "Outputs": {
 
     }
