@@ -94,4 +94,8 @@ Getting good at working with AWS services means getting good at using their docu
 * To/from email. No reason they can't be the same.
 * SMTP credentials.
 
+You'll need to log in to the camera web portal, I found that there were two users besides the admin (user and guest) which can not be managed from the mobile app. You may want to update default passwords on these so you don't unknowingly participate in [DDoSing Dyn DNS servers.](https://dyn.com/blog/dyn-statement-on-10212016-ddos-attack/).
+
+You'll also need to set up your motion alarm. For me, this is something I found easier to do in the mobile app. I find the camera to be incredibly sensitive so I adjusted the setting to 'low'.
+
 Fill this stuff in, then click the test button and you should be in business!
