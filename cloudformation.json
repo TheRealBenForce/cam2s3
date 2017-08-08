@@ -21,16 +21,30 @@
           "Default": ""
       },
       "notificationEmail": {
-          "Description": "Email to be notified when S3 receives a new email.",
+          "Description": "Optional. Email address to be notified when S3 receives a new email.",
           "Type": "String",
           "Default": ""
       },
+      "notificationPhone": {
+          "Description": "Optional phone number with country code and no dashes (ex for US: 18885550042). ",
+          "Type": "String",
+          "Default": "",
+          "AllowedPattern": "^[0-9]{0,15}$",
+          "ConstraintDescription" : "No dashes in E.164 format. "
+      },
+
 
     },
     "Mappings": {
 
     },
     "Conditions": {
+      "HasEmailSubscription" : {
+         "Fn::Not" : [{"Fn::Equals" : [{"Ref" : "notificationEmail"}, ""]}]
+      },
+      "HasPhoneSubscription" : {
+         "Fn::Not" : [{"Fn::Equals" : [{"Ref" : "notificationPhone"}, ""]}]
+      }
 
     },
     "Resources": {
@@ -101,13 +115,29 @@
         "Type": "AWS::SNS::Topic",
         "Properties": {
           "DisplayName": "SecurityCameraAlarm",
-          "Subscription": [
-            {
-              "Endpoint" : { "Ref": "notificationEmail" },
-              "Protocol" : "email"
-            }
-          ],
           "TopicName": "SecurityCameraAlarm"
+        }
+      },
+
+      "snsEmailSubscription": {
+        "Type" : "AWS::SNS::Subscription",
+        "DependsOn" : "snsTopic",
+        "Condition" : "HasEmailSubscription",
+        "Properties" : {
+          "Endpoint" : { "Ref": "notificationEmail" },
+          "Protocol" : "email",
+          "TopicArn" : { "Ref": "snsTopic" }
+        }
+      },
+
+      "snsPhoneSubscription": {
+        "Type" : "AWS::SNS::Subscription",
+        "DependsOn" : "snsTopic",
+        "Condition" : "HasPhoneSubscription",
+        "Properties" : {
+          "Endpoint" : { "Ref": "notificationPhone" },
+          "Protocol" : "sms",
+          "TopicArn" : { "Ref": "snsTopic" }
         }
       },
 
