@@ -1,4 +1,4 @@
-This project demonstrates how to use Amazon SES to store security camera alarm emails in S3.
+This project demonstrates how to use Amazon SES to store security camera alarm emails in S3. There is probably no real reason why you would want to do this except to receive text message notifications from your security camera by means of Amazon SES.
 
 ## Cloudformation work
 
